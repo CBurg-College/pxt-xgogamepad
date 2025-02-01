@@ -36,32 +36,32 @@ namespace CXgoGamepad {
     let GROUP = Group.Group1
 
     let JSANGLE = 0
-    let JSSIZE = 0
+    let JSPOWER = 0
 
     export enum Direction {
-        //% block="Forward"
-        //% block.loc.nl="noord"
+        //% block="forward"
+        //% block.loc.nl="vooruit"
         Forward,
-        //% block="Right forward"
-        //% block.loc.nl="noordoost"
+        //% block="right forward"
+        //% block.loc.nl="rechts vooruit"
         ForwRight,
-        //% block="Right"
-        //% block.loc.nl="oost"
+        //% block="right"
+        //% block.loc.nl="rechts"
         Right,
-        //% block="Right reverse"
-        //% block.loc.nl="zuidoost"
+        //% block="right reverse"
+        //% block.loc.nl="rechts achteruit"
         RevRight,
         //% block="reverse"
-        //% block.loc.nl="zuid"
+        //% block.loc.nl="achteruit"
         Reverse,
-        //% block="Left reverse"
-        //% block.loc.nl="zuidwest"
+        //% block="left reverse"
+        //% block.loc.nl="links achteruit"
         RevLeft,
-        //% block="Left"
-        //% block.loc.nl="west"
+        //% block="left"
+        //% block.loc.nl="links"
         Left,
-        //% block="Left forward"
-        //% block.loc.nl="noordwest"
+        //% block="left forward"
+        //% block.loc.nl="links vooruit"
         ForwLeft
     }
 
@@ -106,7 +106,14 @@ namespace CXgoGamepad {
 
     type gamepadHandler = () => void
 
-    let EventJoystick: gamepadHandler
+    let EventJoystickN:  gamepadHandler
+    let EventJoystickNE: gamepadHandler
+    let EventJoystickE:  gamepadHandler
+    let EventJoystickSE: gamepadHandler
+    let EventJoystickS:  gamepadHandler
+    let EventJoystickSW: gamepadHandler
+    let EventJoystickW:  gamepadHandler
+    let EventJoystickNW: gamepadHandler
 
     let EventPressed1: gamepadHandler
     let EventPressed2: gamepadHandler
@@ -119,9 +126,24 @@ namespace CXgoGamepad {
     let EventReleased4: gamepadHandler
 
     export function handleEventJoystick(value: number) {
-        JSSIZE = Math.floor(value / 1000)
-        JSANGLE = value - JSSIZE * 1000
-        if (EventJoystick) EventJoystick()
+        JSPOWER = Math.floor(value / 1000)
+        JSANGLE = value - JSPOWER * 1000
+        if ((JSANGLE > 338 || JSANGLE < 23) && EventJoystickN)
+            EventJoystickN()
+        if ((JSANGLE > 23 && JSANGLE < 68) && EventJoystickNE)
+            EventJoystickNE()
+        if ((JSANGLE > 68 && JSANGLE < 113) && EventJoystickE)
+            EventJoystickE()
+        if ((JSANGLE > 113 && JSANGLE < 158) && EventJoystickSE)
+            EventJoystickSE()
+        if ((JSANGLE > 158 && JSANGLE < 203) && EventJoystickS)
+            EventJoystickS()
+        if ((JSANGLE > 203 && JSANGLE < 248) && EventJoystickSW)
+            EventJoystickSW()
+        if ((JSANGLE > 248 && JSANGLE < 293) && EventJoystickW)
+            EventJoystickW()
+        if ((JSANGLE > 293 && JSANGLE < 338) && EventJoystickNW)
+            EventJoystickNW()
     }
 
     export function handleEventPressed(button: Gamepad) {
@@ -172,16 +194,16 @@ namespace CXgoGamepad {
         return false;
     }
 
-    //% block="direction"
-    //% block.loc.nl="richting"
+    //% block="joystick direction"
+    //% block.loc.nl="joystick-richting"
     export function direction(): number {
         return JSANGLE
     }
 
-    //% block="value"
-    //% block.loc.nl="waarde"
+    //% block="joystick-power"
+    //% block.loc.nl="joystick-kracht"
     export function value(): number {
-        return JSSIZE
+        return JSPOWER
     }
 
     //% block="%button is down"
@@ -196,10 +218,19 @@ namespace CXgoGamepad {
         return false;
     }
 
-    //% block="execute with joystick direction %dir and %pow"
-    //% block.loc.nl="doe bij joystick richting %dir %pow"
-    export function onJoystick(dir: Direction, pow: Power, programmableCode: () => void): void {
-        EventJoystick = programmableCode
+    //% block="when the joystick direction is %dir"
+    //% block.loc.nl="wanneer de joystick richting is %dir"
+    export function onJoystick(dir: Direction, programmableCode: () => void): void {
+        switch (dir) {
+            case Direction.Forward: EventJoystickN = programmableCode; break;
+            case Direction.ForwRight: EventJoystickNE = programmableCode; break;
+            case Direction.Right: EventJoystickE = programmableCode; break;
+            case Direction.RevRight: EventJoystickSE = programmableCode; break;
+            case Direction.Reverse: EventJoystickS = programmableCode; break;
+            case Direction.RevLeft: EventJoystickSW = programmableCode; break;
+            case Direction.Left: EventJoystickW = programmableCode; break;
+            case Direction.ForwLeft: EventJoystickNW = programmableCode; break;
+        }
     }
 
     //% block="when %button is released"
