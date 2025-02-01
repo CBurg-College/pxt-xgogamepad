@@ -38,6 +38,50 @@ namespace CXgoGamepad {
     let JSANGLE = 0
     let JSSIZE = 0
 
+    export enum Direction {
+        //% block="Forward"
+        //% block.loc.nl="noord"
+        Forward,
+        //% block="Right forward"
+        //% block.loc.nl="noordoost"
+        ForwRight,
+        //% block="Right"
+        //% block.loc.nl="oost"
+        Right,
+        //% block="Right reverse"
+        //% block.loc.nl="zuidoost"
+        RevRight,
+        //% block="reverse"
+        //% block.loc.nl="zuid"
+        Reverse,
+        //% block="Left reverse"
+        //% block.loc.nl="zuidwest"
+        RevLeft,
+        //% block="Left"
+        //% block.loc.nl="west"
+        Left,
+        //% block="Left forward"
+        //% block.loc.nl="noordwest"
+        ForwLeft
+    }
+
+    export enum Power {
+        //% block="Full power"
+        //% block.loc.nl="volle kracht"
+        Full,
+        //% block="Half full power"
+        //% block.loc.nl="halfvolle kracht"
+        Halffull,
+        //% block="Half power"
+        //% block.loc.nl="halve kracht"
+        Half,
+        //% block="Low power"
+        //% block.loc.nl="weinig kracht"
+        Low,
+        //% block="without power"
+        //% block.loc.nl="zonder kracht"
+        Powerless
+    }
     export enum Gamepad {
         //% block="up"
         //% block.loc.nl="omhoog"
@@ -60,7 +104,10 @@ namespace CXgoGamepad {
     let PRESSED3 = false
     let PRESSED4 = false
 
+    type joystickHandler = (dir: Direction, pow: Power) => void
     type gamepadHandler = () => void
+
+    let EventJoystick: joystickHandler
 
     let EventPressed1: gamepadHandler
     let EventPressed2: gamepadHandler
@@ -71,6 +118,10 @@ namespace CXgoGamepad {
     let EventReleased2: gamepadHandler
     let EventReleased3: gamepadHandler
     let EventReleased4: gamepadHandler
+
+    export function handleEventJoystick(dir: Direction, pow: Power) {
+        if (EventJoystick) EventJoystick(dir, pow)
+    }
 
     export function handleEventPressed(button: Gamepad) {
         switch (button) {
@@ -145,6 +196,12 @@ namespace CXgoGamepad {
             case Gamepad.Button4: return PRESSED4;
         }
         return false;
+    }
+
+    //% block="execute with joystick direction %dir and %pow"
+    //% block.loc.nl="doe bij joystick richting %dir %pow"
+    export function onJoystick(dir: Direction, pow: Power, programmableCode: () => void): void {
+        EventJoystick = programmableCode
     }
 
     //% block="when %button is released"
