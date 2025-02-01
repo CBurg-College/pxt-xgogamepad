@@ -110,7 +110,8 @@ namespace CXgoGamepad {
 
     type gamepadHandler = () => void
 
-    let EventJoystickN:  gamepadHandler
+    let EventJoystickX: gamepadHandler
+    let EventJoystickN: gamepadHandler
     let EventJoystickNE: gamepadHandler
     let EventJoystickE:  gamepadHandler
     let EventJoystickSE: gamepadHandler
@@ -134,18 +135,24 @@ namespace CXgoGamepad {
         JSANGLE = value - JSPOWER * 1000
         let dir: Direction
 
-        if (JSANGLE > 338 || JSANGLE < 23) dir = Direction.Forward
-        if (JSANGLE > 23 && JSANGLE < 68) dir = Direction.ForwRight
-        if (JSANGLE > 68 && JSANGLE < 113) dir = Direction.Right
-        if (JSANGLE > 113 && JSANGLE < 158) dir = Direction.RevRight
-        if (JSANGLE > 158 && JSANGLE < 203) dir = Direction.Reverse
-        if (JSANGLE > 203 && JSANGLE < 248) dir = Direction.RevLeft
-        if (JSANGLE > 248 && JSANGLE < 293) dir = Direction.Left
-        if (JSANGLE > 293 && JSANGLE < 338) dir = Direction.ForwLeft
+        if (JSPOWER) {
+            if (JSANGLE > 338 || JSANGLE < 23) dir = Direction.Forward
+            if (JSANGLE > 23 && JSANGLE < 68) dir = Direction.ForwRight
+            if (JSANGLE > 68 && JSANGLE < 113) dir = Direction.Right
+            if (JSANGLE > 113 && JSANGLE < 158) dir = Direction.RevRight
+            if (JSANGLE > 158 && JSANGLE < 203) dir = Direction.Reverse
+            if (JSANGLE > 203 && JSANGLE < 248) dir = Direction.RevLeft
+            if (JSANGLE > 248 && JSANGLE < 293) dir = Direction.Left
+            if (JSANGLE > 293 && JSANGLE < 338) dir = Direction.ForwLeft
+        }
+        else
+            dir = Direction.None
 
         if (dir == JSDIR) return;
         JSDIR = dir
 
+        if ((JSDIR == Direction.None) && EventJoystickX)
+            EventJoystickX()
         if ((JSDIR == Direction.Forward) && EventJoystickN)
             EventJoystickN()
         if ((JSDIR == Direction.ForwRight) && EventJoystickNE)
@@ -240,6 +247,7 @@ namespace CXgoGamepad {
     //% block.loc.nl="wanneer de joystick richting %dir is"
     export function onJoystick(dir: Direction, programmableCode: () => void): void {
         switch (dir) {
+            case Direction.None: EventJoystickX = programmableCode; break;
             case Direction.Forward: EventJoystickN = programmableCode; break;
             case Direction.ForwRight: EventJoystickNE = programmableCode; break;
             case Direction.Right: EventJoystickE = programmableCode; break;
