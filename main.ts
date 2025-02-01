@@ -1,4 +1,4 @@
-//% color="#00CC00" icon="\uf11b"
+//% color="#00CC00" icon="\uf1f9"
 //% block="XGO Gamepad"
 //% block.loc.nl="XGO Gamepad"
 namespace CXgoGamepad {
@@ -35,6 +35,9 @@ namespace CXgoGamepad {
 
     let GROUP = Group.Group1
 
+    let JSANGLE = 0
+    let JSSIZE = 0
+
     export enum Gamepad {
         //% block="up"
         //% block.loc.nl="omhoog"
@@ -69,13 +72,6 @@ namespace CXgoGamepad {
     let EventReleased3: gamepadHandler
     let EventReleased4: gamepadHandler
 
-    pins.digitalWritePin(DigitalPin.P0, 0)
-    pins.setPull(DigitalPin.P12, PinPullMode.PullUp)
-    pins.setPull(DigitalPin.P13, PinPullMode.PullUp)
-    pins.setPull(DigitalPin.P14, PinPullMode.PullUp)
-    pins.setPull(DigitalPin.P15, PinPullMode.PullUp)
-    pins.digitalWritePin(DigitalPin.P16, 1)
-
     export function handleEventPressed(button: Gamepad) {
         switch (button) {
             case Gamepad.Button1: PRESSED1 = true; if (EventPressed1) EventPressed1(); break;
@@ -94,13 +90,18 @@ namespace CXgoGamepad {
         }
     }
 
-    radio.onReceivedNumber(function (button: number) {
-        if (button >= BUTTONMAX) {
-            button -= BUTTONMAX
-            handleEventReleased(button)
+    radio.onReceivedNumber(function (value: number) {
+        if (value >= 1000) {
+            value -= 1000
+            JSSIZE = Math.floor(value / 1000)
+            JSANGLE = value - JSSIZE * 1000
         }
-        else
-            handleEventPressed(button)
+        else {
+            if (value >= BUTTONMAX)
+                handleEventReleased(value - BUTTONMAX)
+            else
+                handleEventPressed(value)
+        }
     })
 
     //% block="join %group"
