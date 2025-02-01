@@ -123,6 +123,18 @@ namespace CXgoGamepad {
         return false;
     }
 
+    //% block="direction"
+    //% block.loc.nl="richting"
+    export function direction(): number {
+        return JSANGLE
+    }
+
+    //% block="value"
+    //% block.loc.nl="waarde"
+    export function value(): number {
+        return JSSIZE
+    }
+
     //% block="%button is down"
     //% block.loc.nl="%button is ingedrukt"
     export function isPressed(button: Gamepad): boolean {
