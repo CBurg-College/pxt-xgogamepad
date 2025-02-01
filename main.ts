@@ -35,10 +35,10 @@ namespace CXgoGamepad {
 
     let GROUP = Group.Group1
 
-    let JSANGLE = 0
-    let JSPOWER = 0
-
     export enum Direction {
+        //% block="none"
+        //% block.loc.nl="geen"
+        None,
         //% block="forward"
         //% block.loc.nl="vooruit"
         Forward,
@@ -64,6 +64,10 @@ namespace CXgoGamepad {
         //% block.loc.nl="links vooruit"
         ForwLeft
     }
+
+    let JSANGLE = 0
+    let JSPOWER = 0
+    let JSDIR = Direction.None
 
     export enum Power {
         //% block="Full power"
@@ -128,21 +132,35 @@ namespace CXgoGamepad {
     export function handleEventJoystick(value: number) {
         JSPOWER = Math.floor(value / 1000)
         JSANGLE = value - JSPOWER * 1000
-        if ((JSANGLE > 338 || JSANGLE < 23) && EventJoystickN)
+        let dir: Direction
+
+        if (JSANGLE > 338 || JSANGLE < 23) dir = Direction.Forward
+        if (JSANGLE > 23 && JSANGLE < 68) dir = Direction.ForwRight
+        if (JSANGLE > 68 && JSANGLE < 113) dir = Direction.Right
+        if (JSANGLE > 113 && JSANGLE < 158) dir = Direction.RevRight
+        if (JSANGLE > 158 && JSANGLE < 203) dir = Direction.Reverse
+        if (JSANGLE > 203 && JSANGLE < 248) dir = Direction.RevLeft
+        if (JSANGLE > 248 && JSANGLE < 293) dir = Direction.Left
+        if (JSANGLE > 293 && JSANGLE < 338) dir = Direction.ForwLeft
+
+        if (dir == JSDIR) return;
+        JSDIR = dir
+
+        if ((JSDIR == Direction.Forward) && EventJoystickN)
             EventJoystickN()
-        if ((JSANGLE > 23 && JSANGLE < 68) && EventJoystickNE)
+        if ((JSDIR == Direction.ForwRight) && EventJoystickNE)
             EventJoystickNE()
-        if ((JSANGLE > 68 && JSANGLE < 113) && EventJoystickE)
+        if ((JSDIR == Direction.Right) && EventJoystickE)
             EventJoystickE()
-        if ((JSANGLE > 113 && JSANGLE < 158) && EventJoystickSE)
+        if ((JSDIR == Direction.RevRight) && EventJoystickSE)
             EventJoystickSE()
-        if ((JSANGLE > 158 && JSANGLE < 203) && EventJoystickS)
+        if ((JSDIR == Direction.Reverse) && EventJoystickS)
             EventJoystickS()
-        if ((JSANGLE > 203 && JSANGLE < 248) && EventJoystickSW)
+        if ((JSDIR == Direction.RevLeft) && EventJoystickSW)
             EventJoystickSW()
-        if ((JSANGLE > 248 && JSANGLE < 293) && EventJoystickW)
+        if ((JSDIR == Direction.Left) && EventJoystickW)
             EventJoystickW()
-        if ((JSANGLE > 293 && JSANGLE < 338) && EventJoystickNW)
+        if ((JSDIR == Direction.ForwLeft) && EventJoystickNW)
             EventJoystickNW()
     }
 
@@ -219,7 +237,7 @@ namespace CXgoGamepad {
     }
 
     //% block="when the joystick direction is %dir"
-    //% block.loc.nl="wanneer de joystick richting is %dir"
+    //% block.loc.nl="wanneer de joystick richting %dir is"
     export function onJoystick(dir: Direction, programmableCode: () => void): void {
         switch (dir) {
             case Direction.Forward: EventJoystickN = programmableCode; break;
