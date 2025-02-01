@@ -104,10 +104,9 @@ namespace CXgoGamepad {
     let PRESSED3 = false
     let PRESSED4 = false
 
-    type joystickHandler = (dir: Direction, pow: Power) => void
     type gamepadHandler = () => void
 
-    let EventJoystick: joystickHandler
+    let EventJoystick: gamepadHandler
 
     let EventPressed1: gamepadHandler
     let EventPressed2: gamepadHandler
@@ -119,8 +118,10 @@ namespace CXgoGamepad {
     let EventReleased3: gamepadHandler
     let EventReleased4: gamepadHandler
 
-    export function handleEventJoystick(dir: Direction, pow: Power) {
-        if (EventJoystick) EventJoystick(dir, pow)
+    export function handleEventJoystick(value: number) {
+        JSSIZE = Math.floor(value / 1000)
+        JSANGLE = value - JSSIZE * 1000
+        if (EventJoystick) EventJoystick()
     }
 
     export function handleEventPressed(button: Gamepad) {
@@ -142,11 +143,8 @@ namespace CXgoGamepad {
     }
 
     radio.onReceivedNumber(function (value: number) {
-        if (value >= 1000) {
-            value -= 1000
-            JSSIZE = Math.floor(value / 1000)
-            JSANGLE = value - JSSIZE * 1000
-        }
+        if (value >= 1000)
+            handleEventJoystick(value - 1000)
         else {
             if (value >= BUTTONMAX)
                 handleEventReleased(value - BUTTONMAX)
