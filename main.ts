@@ -259,7 +259,7 @@ namespace CXgoGamepad {
     }
 
     //% block="when %button is pressed"
-    //% block.loc.nl="wanneer op %button gedrukt"
+    //% block.loc.nl="wanneer op %button wordt gedrukt"
     export function onButtonPressed(button: Gamepad, programmableCode: () => void): void {
         switch (button) {
             case Gamepad.Button1: EventPressed1 = programmableCode; break;
