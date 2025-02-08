@@ -207,6 +207,7 @@ namespace CXgoGamepad {
         radio.setGroup(GROUP)
     }
 
+    //% subcategory="Testen"
     //% block="%button is up"
     //% block.loc.nl="%button is losgelaten"
     export function isReleased(button: Gamepad): boolean {
@@ -219,18 +220,7 @@ namespace CXgoGamepad {
         return false;
     }
 
-    //% block="joystick direction"
-    //% block.loc.nl="joystick-richting"
-    export function direction(): number {
-        return JSANGLE
-    }
-
-    //% block="joystick-power"
-    //% block.loc.nl="joystick-kracht"
-    export function value(): number {
-        return JSPOWER
-    }
-
+    //% subcategory="Testen"
     //% block="%button is down"
     //% block.loc.nl="%button is ingedrukt"
     export function isPressed(button: Gamepad): boolean {
@@ -243,20 +233,18 @@ namespace CXgoGamepad {
         return false;
     }
 
-    //% block="when the joystick direction is %dir"
-    //% block.loc.nl="wanneer de joystick richting %dir is"
-    export function onJoystick(dir: Direction, programmableCode: () => void): void {
-        switch (dir) {
-            case Direction.None: EventJoystickX = programmableCode; break;
-            case Direction.Forward: EventJoystickN = programmableCode; break;
-            case Direction.ForwRight: EventJoystickNE = programmableCode; break;
-            case Direction.Right: EventJoystickE = programmableCode; break;
-            case Direction.RevRight: EventJoystickSE = programmableCode; break;
-            case Direction.Reverse: EventJoystickS = programmableCode; break;
-            case Direction.RevLeft: EventJoystickSW = programmableCode; break;
-            case Direction.Left: EventJoystickW = programmableCode; break;
-            case Direction.ForwLeft: EventJoystickNW = programmableCode; break;
-        }
+    //% subcategory="Testen"
+    //% block="joystick-power"
+    //% block.loc.nl="joystick-kracht"
+    export function value(): number {
+        return JSPOWER
+    }
+
+    //% subcategory="Testen"
+    //% block="joystick direction"
+    //% block.loc.nl="joystick-richting"
+    export function direction(): number {
+        return JSANGLE
     }
 
     //% block="when %button is released"
@@ -278,6 +266,22 @@ namespace CXgoGamepad {
             case Gamepad.Button2: EventPressed2 = programmableCode; break;
             case Gamepad.Button3: EventPressed3 = programmableCode; break;
             case Gamepad.Button4: EventPressed4 = programmableCode; break;
+        }
+    }
+
+    //% block="when the joystick direction is %dir"
+    //% block.loc.nl="wanneer de joystick richting %dir is"
+    export function onJoystick(dir: Direction, programmableCode: () => void): void {
+        switch (dir) {
+            case Direction.None: EventJoystickX = programmableCode; break;
+            case Direction.Forward: EventJoystickN = programmableCode; break;
+            case Direction.ForwRight: EventJoystickNE = programmableCode; break;
+            case Direction.Right: EventJoystickE = programmableCode; break;
+            case Direction.RevRight: EventJoystickSE = programmableCode; break;
+            case Direction.Reverse: EventJoystickS = programmableCode; break;
+            case Direction.RevLeft: EventJoystickSW = programmableCode; break;
+            case Direction.Left: EventJoystickW = programmableCode; break;
+            case Direction.ForwLeft: EventJoystickNW = programmableCode; break;
         }
     }
 
