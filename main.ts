@@ -1,4 +1,4 @@
-//% color="#FF8800" icon="\uf1f9"
+//% color="#00CC00" icon="\uf1f9"
 //% block="XGO Gamepad"
 //% block.loc.nl="XGO Gamepad"
 namespace CXgoGamepad {
